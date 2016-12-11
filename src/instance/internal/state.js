@@ -1,5 +1,5 @@
 import Watcher from '../../watcher'
-import { compileAndLinkProps } from '../../compiler/index'
+import {compileAndLinkProps} from '../../compiler/index'
 import Dep from '../../observer/dep'
 import {
   observe,
@@ -42,11 +42,11 @@ export default function (Vue) {
    */
 
   Vue.prototype._initState = function () {
-    this._initProps()
-    this._initMeta()
-    this._initMethods()
+    // this._initProps()
+    // this._initMeta()
+    // this._initMethods()
     this._initData()
-    this._initComputed()
+    // this._initComputed()
   }
 
   /**
@@ -98,6 +98,7 @@ export default function (Vue) {
       // 2. it's provided via a instantiation option AND there are no
       //    template prop present
       if (!props || !hasOwn(props, key)) {
+        console.log("proxy data")
         this._proxy(key)
       } else if (process.env.NODE_ENV !== 'production') {
         warn(
@@ -110,6 +111,7 @@ export default function (Vue) {
       }
     }
     // observe data
+    console.log("observe data")
     observe(data, this)
   }
 
@@ -166,10 +168,10 @@ export default function (Vue) {
       Object.defineProperty(self, key, {
         configurable: true,
         enumerable: true,
-        get: function proxyGetter () {
+        get: function proxyGetter() {
           return self._data[key]
         },
-        set: function proxySetter (val) {
+        set: function proxySetter(val) {
           self._data[key] = val
         }
       })
@@ -203,7 +205,9 @@ export default function (Vue) {
    * special getter/setters
    */
 
-  function noop () {}
+  function noop() {
+  }
+
   Vue.prototype._initComputed = function () {
     var computed = this.$options.computed
     if (computed) {
@@ -219,8 +223,8 @@ export default function (Vue) {
         } else {
           def.get = userDef.get
             ? userDef.cache !== false
-              ? makeComputedGetter(userDef.get, this)
-              : bind(userDef.get, this)
+            ? makeComputedGetter(userDef.get, this)
+            : bind(userDef.get, this)
             : noop
           def.set = userDef.set
             ? bind(userDef.set, this)
@@ -231,11 +235,11 @@ export default function (Vue) {
     }
   }
 
-  function makeComputedGetter (getter, owner) {
+  function makeComputedGetter(getter, owner) {
     var watcher = new Watcher(owner, getter, null, {
       lazy: true
     })
-    return function computedGetter () {
+    return function computedGetter() {
       if (watcher.dirty) {
         watcher.evaluate()
       }

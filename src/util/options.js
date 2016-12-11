@@ -10,8 +10,8 @@ import {
   camelize,
   hyphenate
 } from './lang'
-import { warn } from './debug'
-import { commonTagRE, reservedTagRE } from './component'
+import {warn} from './debug'
+import {commonTagRE, reservedTagRE} from './component'
 
 /**
  * Option overwriting strategies are functions that handle
@@ -31,7 +31,7 @@ var strats = config.optionMergeStrategies = Object.create(null)
  * Helper that recursively merges two data objects together.
  */
 
-function mergeData (to, from) {
+function mergeData(to, from) {
   var key, toVal, fromVal
   for (key in from) {
     toVal = to[key]
@@ -72,14 +72,14 @@ strats.data = function (parentVal, childVal, vm) {
     // merged result of both functions... no need to
     // check if parentVal is a function here because
     // it has to be a function to pass previous merges.
-    return function mergedDataFn () {
+    return function mergedDataFn() {
       return mergeData(
         childVal.call(this),
         parentVal.call(this)
       )
     }
   } else if (parentVal || childVal) {
-    return function mergedInstanceDataFn () {
+    return function mergedInstanceDataFn() {
       // instance merge
       var instanceData = typeof childVal === 'function'
         ? childVal.call(vm)
@@ -122,23 +122,23 @@ strats.el = function (parentVal, childVal, vm) {
  */
 
 strats.init =
-strats.created =
-strats.ready =
-strats.attached =
-strats.detached =
-strats.beforeCompile =
-strats.compiled =
-strats.beforeDestroy =
-strats.destroyed =
-strats.activate = function (parentVal, childVal) {
-  return childVal
-    ? parentVal
-      ? parentVal.concat(childVal)
-      : isArray(childVal)
-        ? childVal
-        : [childVal]
-    : parentVal
-}
+  strats.created =
+    strats.ready =
+      strats.attached =
+        strats.detached =
+          strats.beforeCompile =
+            strats.compiled =
+              strats.beforeDestroy =
+                strats.destroyed =
+                  strats.activate = function (parentVal, childVal) {
+                    return childVal
+                      ? parentVal
+                      ? parentVal.concat(childVal)
+                      : isArray(childVal)
+                      ? childVal
+                      : [childVal]
+                      : parentVal
+                  }
 
 /**
  * Assets
@@ -148,7 +148,7 @@ strats.activate = function (parentVal, childVal) {
  * options and parent options.
  */
 
-function mergeAssets (parentVal, childVal) {
+function mergeAssets(parentVal, childVal) {
   var res = Object.create(parentVal || null)
   return childVal
     ? extend(res, guardArrayAssets(childVal))
@@ -167,38 +167,38 @@ config._assetTypes.forEach(function (type) {
  */
 
 strats.watch =
-strats.events = function (parentVal, childVal) {
-  if (!childVal) return parentVal
-  if (!parentVal) return childVal
-  var ret = {}
-  extend(ret, parentVal)
-  for (var key in childVal) {
-    var parent = ret[key]
-    var child = childVal[key]
-    if (parent && !isArray(parent)) {
-      parent = [parent]
+  strats.events = function (parentVal, childVal) {
+    if (!childVal) return parentVal
+    if (!parentVal) return childVal
+    var ret = {}
+    extend(ret, parentVal)
+    for (var key in childVal) {
+      var parent = ret[key]
+      var child = childVal[key]
+      if (parent && !isArray(parent)) {
+        parent = [parent]
+      }
+      ret[key] = parent
+        ? parent.concat(child)
+        : [child]
     }
-    ret[key] = parent
-      ? parent.concat(child)
-      : [child]
+    return ret
   }
-  return ret
-}
 
 /**
  * Other object hashes.
  */
 
 strats.props =
-strats.methods =
-strats.computed = function (parentVal, childVal) {
-  if (!childVal) return parentVal
-  if (!parentVal) return childVal
-  var ret = Object.create(null)
-  extend(ret, parentVal)
-  extend(ret, childVal)
-  return ret
-}
+  strats.methods =
+    strats.computed = function (parentVal, childVal) {
+      if (!childVal) return parentVal
+      if (!parentVal) return childVal
+      var ret = Object.create(null)
+      extend(ret, parentVal)
+      extend(ret, childVal)
+      return ret
+    }
 
 /**
  * Default strategy.
@@ -217,7 +217,7 @@ var defaultStrat = function (parentVal, childVal) {
  * @param {Object} options
  */
 
-function guardComponents (options) {
+function guardComponents(options) {
   if (options.components) {
     var components = options.components =
       guardArrayAssets(options.components)
@@ -255,7 +255,7 @@ function guardComponents (options) {
  * @param {Object} options
  */
 
-function guardProps (options) {
+function guardProps(options) {
   var props = options.props
   var i, val
   if (isArray(props)) {
@@ -275,7 +275,7 @@ function guardProps (options) {
     while (i--) {
       val = props[keys[i]]
       if (typeof val === 'function') {
-        props[keys[i]] = { type: val }
+        props[keys[i]] = {type: val}
       }
     }
   }
@@ -289,7 +289,7 @@ function guardProps (options) {
  * @return {Object}
  */
 
-function guardArrayAssets (assets) {
+function guardArrayAssets(assets) {
   if (isArray(assets)) {
     var res = {}
     var i = assets.length
@@ -322,9 +322,11 @@ function guardArrayAssets (assets) {
  *                     an instantiation merge.
  */
 
-export function mergeOptions (parent, child, vm) {
+export function mergeOptions(parent, child, vm) {
+  //处理components选项和props选项
   guardComponents(child)
   guardProps(child)
+
   if (process.env.NODE_ENV !== 'production') {
     if (child.propsData && !vm) {
       warn('propsData can only be used as an instantiation option.')
@@ -346,18 +348,22 @@ export function mergeOptions (parent, child, vm) {
       parent = mergeOptions(parent, mixinOptions, vm)
     }
   }
+
   for (key in parent) {
     mergeField(key)
   }
+
   for (key in child) {
     if (!hasOwn(parent, key)) {
       mergeField(key)
     }
   }
-  function mergeField (key) {
+
+  function mergeField(key) {
     var strat = strats[key] || defaultStrat
     options[key] = strat(parent[key], child[key], vm, key)
   }
+
   return options
 }
 
@@ -373,7 +379,7 @@ export function mergeOptions (parent, child, vm) {
  * @return {Object|Function}
  */
 
-export function resolveAsset (options, type, id, warnMissing) {
+export function resolveAsset(options, type, id, warnMissing) {
   /* istanbul ignore if */
   if (typeof id !== 'string') {
     return

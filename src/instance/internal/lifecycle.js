@@ -256,13 +256,13 @@ export default function (Vue) {
     // reasonable responsibility for the user rather than
     // always throwing an error on them.
     this.$el =
-    this.$parent =
-    this.$root =
-    this.$children =
-    this._watchers =
-    this._context =
-    this._scope =
-    this._directives = null
+      this.$parent =
+        this.$root =
+          this.$children =
+            this._watchers =
+              this._context =
+                this._scope =
+                  this._directives = null
     // call the last hook...
     this._isDestroyed = true
     this._callHook('destroyed')

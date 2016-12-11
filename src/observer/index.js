@@ -192,6 +192,7 @@ export function observe (value, vm) {
  */
 
 export function defineReactive (obj, key, val) {
+  //为什么这里还需要定义一个Dep,observer.dep干什么用的
   var dep = new Dep()
 
   var property = Object.getOwnPropertyDescriptor(obj, key)

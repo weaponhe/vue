@@ -24,6 +24,7 @@ export default function (Vue) {
     if (!el) {
       el = document.createElement('div')
     }
+    console.log("start compiling")
     this._compile(el)
     this._initDOMHooks()
     if (inDoc(this.$el)) {

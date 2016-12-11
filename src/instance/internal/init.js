@@ -1,4 +1,4 @@
-import { mergeOptions } from '../../util/index'
+import {mergeOptions} from '../../util/index'
 
 let uid = 0
 
@@ -41,16 +41,16 @@ export default function (Vue) {
     // fragment instance properties
     this._isFragment = false
     this._fragment =         // @type {DocumentFragment}
-    this._fragmentStart =    // @type {Text|Comment}
-    this._fragmentEnd = null // @type {Text|Comment}
+      this._fragmentStart =    // @type {Text|Comment}
+        this._fragmentEnd = null // @type {Text|Comment}
 
     // lifecycle state
     this._isCompiled =
-    this._isDestroyed =
-    this._isReady =
-    this._isAttached =
-    this._isBeingDestroyed =
-    this._vForRemoving = false
+      this._isDestroyed =
+        this._isReady =
+          this._isAttached =
+            this._isBeingDestroyed =
+              this._vForRemoving = false
     this._unlinkFn = null
 
     // context:
@@ -86,7 +86,7 @@ export default function (Vue) {
       options,
       this
     )
-
+    console.log("mergedOptions:", options)
     // set ref
     this._updateRef()
 
